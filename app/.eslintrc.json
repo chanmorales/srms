@@ -11,7 +11,18 @@
     "plugin:prettier/recommended",
     "plugin:import/recommended"
   ],
-  "overrides": [],
+  "overrides": [
+    {
+      "files": [
+        "*.jsx",
+        "*.tsx",
+        "*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -56,6 +67,7 @@
         "allowExpressions": true
       }
     ],
+    "@typescript-eslint/no-explicit-any": 0,
     "max-len": [
       "warn",
       {
@@ -66,6 +78,8 @@
     ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "prettier/prettier": [
@@ -76,8 +90,12 @@
     ]
   },
   "settings": {
+    "react": {
+      "version": "detect"
+    },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+      }
     }
   },
   "ignorePatterns": [
