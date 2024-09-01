@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class StudentRecordManagementSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(StudentRecordManagementSystemApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(StudentRecordManagementSystemApplication.class, args);
+  }
 }

@@ -1,4 +1,5 @@
 import { RequestMethod } from "../types";
+import { AppHelper } from "./AppHelper";
 
 export const ApiHelper = {
   /**
@@ -40,7 +41,6 @@ export const ApiHelper = {
 
       // Perform API call
       const response = await fetch(url, options);
-
       switch (response.status) {
         case 204:
           // Success with no content
@@ -50,7 +50,7 @@ export const ApiHelper = {
         case 403:
         case 404:
         case 500:
-          // Error
+          // Handle Error
           console.error(`Request failed: ${action}`);
           throw response;
         default:
@@ -63,7 +63,8 @@ export const ApiHelper = {
           }
       }
     } catch (err: any) {
-      throw await err.text();
+      const errorDetails = await err.text();
+      throw AppHelper.tryParseJson(errorDetails);
     }
   },
 };

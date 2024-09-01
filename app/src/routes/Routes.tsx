@@ -1,6 +1,10 @@
 import { useInject } from "../hooks";
 import { AuthContext } from "../providers";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { Home, Login, Register } from "../pages";
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -25,15 +29,24 @@ export const Routes = () => {
       children: [
         {
           path: "/",
+          element: <Navigate to="/home" replace />,
+        },
+        {
+          path: "/home",
           element: <Home />,
+        },
+        // Redirects all invalid routes to root
+        {
+          path: "*",
+          element: <Navigate to="/" replace />,
         },
       ],
     },
   ];
 
   const router = createBrowserRouter([
-    ...(!token ? unauthenticatedRoutes : []),
     ...authenticatedRoutes,
+    ...(!token ? unauthenticatedRoutes : []),
   ]);
 
   return <RouterProvider router={router} />;

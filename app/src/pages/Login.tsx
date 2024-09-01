@@ -1,31 +1,36 @@
 import "../styles/login.css";
-import { Button, Divider, Flex, Form, Input, Typography } from "antd";
-import { useCallback, useEffect } from "react";
+import { Alert, Button, Divider, Flex, Form, Input, Typography } from "antd";
+import { useCallback, useState } from "react";
 import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
-import { useInject } from "../hooks";
+import { useInject, useService } from "../hooks";
 import { AuthContext } from "../providers";
 import { useNavigate } from "react-router-dom";
 import packageJson from "../../package.json";
+import { LoginFormData } from "../types/Login";
 
 const { Text, Title, Link } = Typography;
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { token, setToken } = useInject(AuthContext);
-
-  useEffect(() => {
-    if (token) {
-      navigate("/", { replace: true });
-    }
-  }, [token, navigate]);
+  const { setToken } = useInject(AuthContext);
+  const { authService } = useService();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onFinish = useCallback(
-    (_values: any) => {
-      console.log(_values);
-      setToken("dummy token");
-      navigate("/", { replace: true });
+    async (loginFormData: LoginFormData) => {
+      try {
+        setErrorMessage(null);
+        const jwt = await authService.login(
+          loginFormData.username,
+          loginFormData.password
+        );
+        setToken(jwt.token);
+        navigate("/home", { replace: true });
+      } catch (err: any) {
+        setErrorMessage(err.message);
+      }
     },
-    [setToken, navigate]
+    [setToken, navigate, authService]
   );
 
   return (
@@ -42,6 +47,14 @@ export const Login = () => {
             </Title>
             <Divider className="m-0 border-white border-[1px]" />
           </Form.Item>
+          {errorMessage && (
+            <Form.Item>
+              <Alert
+                type="error"
+                message={<Text type="danger">{errorMessage}</Text>}
+              />
+            </Form.Item>
+          )}
           <Form.Item
             name="username"
             rules={[

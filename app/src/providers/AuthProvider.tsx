@@ -2,6 +2,7 @@ import {
   createContext,
   FC,
   ReactNode,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -18,19 +19,26 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
+    const savedToken = localStorage.getItem("jwt");
     if (savedToken) {
       setToken(savedToken);
     }
+  }, []);
+
+  const saveToken = useCallback((newToken: string | null) => {
+    setToken(newToken);
+    newToken
+      ? localStorage.setItem("jwt", newToken)
+      : localStorage.removeItem("jwt");
   }, []);
 
   const authContext = useMemo(
     () => ({
       baseUrl: "",
       token: token,
-      setToken: setToken,
+      setToken: saveToken,
     }),
-    [token]
+    [token, saveToken]
   );
 
   return (
