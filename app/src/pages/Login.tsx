@@ -6,7 +6,7 @@ import { useInject, useService } from "../hooks";
 import { AuthContext } from "../providers";
 import { useNavigate } from "react-router-dom";
 import packageJson from "../../package.json";
-import { LoginFormData } from "../types/Login";
+import { LoginFormData } from "../types";
 
 const { Text, Title, Link } = Typography;
 
