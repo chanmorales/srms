@@ -1,6 +1,10 @@
 package com.portfolio.mutex.srms.config;
 
+import static com.portfolio.mutex.srms.common.UriConstants.AUTHENTICATION_BASE_URI;
+import static com.portfolio.mutex.srms.common.UriConstants.LOGOUT_URI;
+
 import com.portfolio.mutex.srms.filter.JwtAuthenticationFilter;
+import com.portfolio.mutex.srms.handler.CustomLogoutSuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +32,7 @@ public class SecurityConfiguration {
    * Whitelisted resource endpoints that doesn't need the user to be authenticated
    */
   private static final String[] WHITELISTED_ENDPOINTS = {
-      "/authentication/**"
+      "/authentication/**", "/swagger-ui/**", "/v3/api-docs",
   };
 
   /**
@@ -42,6 +46,9 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(CsrfConfigurer::disable)
+        .logout(
+            logout -> logout.logoutUrl(AUTHENTICATION_BASE_URI + LOGOUT_URI)
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler()))
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(
             httpRequests -> httpRequests.requestMatchers(WHITELISTED_ENDPOINTS).permitAll()
@@ -62,7 +69,7 @@ public class SecurityConfiguration {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+    configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 

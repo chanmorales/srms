@@ -36,6 +36,7 @@ export const Routes = () => {
           element: <Home />,
         },
         // Redirects all invalid routes to root
+        // TODO: Create an error page
         {
           path: "*",
           element: <Navigate to="/" replace />,
@@ -45,8 +46,8 @@ export const Routes = () => {
   ];
 
   const router = createBrowserRouter([
-    ...authenticatedRoutes,
     ...(!token ? unauthenticatedRoutes : []),
+    ...authenticatedRoutes,
   ]);
 
   return <RouterProvider router={router} />;

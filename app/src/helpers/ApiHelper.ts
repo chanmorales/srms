@@ -35,7 +35,7 @@ export const ApiHelper = {
       if (token) {
         options.headers = {
           ...options.headers,
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
         };
       }
 
